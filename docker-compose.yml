@@ -1,0 +1,41 @@
+version: '3'
+
+services:
+  website:
+    image: php:7-apache
+    restart: always
+    container_name: tsgsp.website
+    ports:
+      - '5080:80'
+    volumes:
+      - './html:/var/www/html'
+
+  website_api:
+    build:
+      context: ./
+      dockerfile: dockerfile
+    restart: always
+    container_name: tsgsp.website.api
+    ports:
+      - '5180:80'
+    volumes:
+      - './api:/var/www/html'
+
+  database:
+    image: mysql
+    container_name: tsgsp.database
+    command: mysqld
+    volumes:
+      - data:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: 'test'
+      MYSQL_USER: 'test'
+      MYSQL_PASSWORD: 'test'
+      MYSQL_ROOT_PASSWORD: 'root'
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+    ports:
+      - '5306:3306'
+
+volumes:
+  data:
+    external: false
